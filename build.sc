@@ -6,4 +6,6 @@ object advent2021 extends ScalaModule {
   def ivyDeps = Agg(
     ivy"dev.zio::zio:${zioVersion}"
   )
+
+  def mainClass = Some("advent2021.Day01Part2")
 }

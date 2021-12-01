@@ -1,9 +1,11 @@
+package advent2021
+
 import zio._
 import zio.console._
 
 import scala.io.Source
 
-object Day01 extends zio.App {
+object Day01Part1 extends zio.App {
   private val readInput = zio.blocking.effectBlocking {
     val source = Source.fromFile("advent2021/src/resources/Day01Input.txt")
     try source.getLines().toList.map(_.toInt) finally source.close()
@@ -20,6 +22,10 @@ object Day01 extends zio.App {
     loop(input, 0)
   }
 
+  def find2021WindowIncrease(input: List[Int]) : Int = {
+    find2021Increase(input.sliding(3).map(_.sum).toList)
+  }
+
   def run(args: List[String]) =
-    readInput.map(find2021Increase).flatMap(r => putStrLn(r.toString)).exitCode
+    readInput.map(find2021WindowIncrease).flatMap(r => putStrLn(r.toString)).exitCode
 }
