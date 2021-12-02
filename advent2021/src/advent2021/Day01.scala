@@ -3,16 +3,17 @@ package advent2021
 import zio._
 import zio.console._
 
+import scala.annotation.tailrec
 import scala.io.Source
 
-object Day01Part1 extends zio.App {
+object Day01 extends zio.App {
   private val readInput = zio.blocking.effectBlocking {
     val source = Source.fromFile("advent2021/src/resources/Day01Input.txt")
     try source.getLines().toList.map(_.toInt) finally source.close()
   }
 
   def find2021Increase(input: List[Int]): Int = {
-    def loop(input: List[Int], acc: Int): Int = {
+    @tailrec def loop(input: List[Int], acc: Int): Int = {
       input match {
         case x :: y :: xs =>
           if( x < y ) loop(y :: xs, acc + 1) else loop(y :: xs, acc)
