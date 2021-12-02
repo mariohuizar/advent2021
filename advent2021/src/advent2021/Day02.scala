@@ -3,6 +3,7 @@ package advent2021
 import zio._
 import zio.console._
 
+import scala.annotation.tailrec
 import scala.io.Source
 
 object Day02 extends zio.App {
@@ -24,6 +25,23 @@ object Day02 extends zio.App {
     horizontalPosition * depth
   }
 
+  def findFinalPositionPart2(input: List[String]): Long = {
+    @tailrec def loop(input: List[String], aim: Long, horizontal: Long, depth: Long): Long = {
+      input match {
+        case x :: xs =>
+          x match {
+            case s"forward $f" => loop(xs, aim, horizontal + f.toLong, depth + aim*f.toLong)
+            case s"down $d" => loop(xs, aim + d.toLong, horizontal, depth)
+            case s"up $u" => loop(xs, aim - u.toLong, horizontal, depth)
+            case _ => 0L
+          }
+        case _ => horizontal * depth
+      }
+    }
+
+    loop(input = input, aim = 0, horizontal = 0, depth = 0)
+  }
+
   def run(args: List[String]) =
-    readInput.map(findFinalPosition).flatMap(r => putStrLn(r.toString)).exitCode
+    readInput.map(findFinalPositionPart2).flatMap(r => putStrLn(r.toString)).exitCode
 }
