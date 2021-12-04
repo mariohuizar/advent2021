@@ -11,7 +11,7 @@ object Day04 extends zio.App {
     try source.getLines().toList finally source.close()
   }
 
-  def bingoScore(input: List[String]): Long = {
+  def bingoScore(input: List[String], winner: Boolean): Long = {
     val bingoNumbers = input.head.split(",").map(_.toInt).toList
     val boardNumbersAsString = input.drop(2).filter(_.nonEmpty)
     val boardNumbersAsListInts = boardNumbersAsString.map(_.replace("  ", " ").split(" ")).flatten.filter(_.nonEmpty).map(_.toInt)
@@ -27,7 +27,7 @@ object Day04 extends zio.App {
       }
     }
     val markedBoards = listOfBoards.map( b => winnerPositionMarkedBoard(bingoNumbers, b, 0))
-    val (bingoNumberPosition, winnerBoardPosition) = markedBoards.map(_._1).zipWithIndex.min
+    val (bingoNumberPosition, winnerBoardPosition) = if (winner) markedBoards.map(_._1).zipWithIndex.min else markedBoards.map(_._1).zipWithIndex.max
     val winnerMarkedBoard = markedBoards(winnerBoardPosition)._2
 
     val sumUnmarkedNumbers = winnerMarkedBoard.flatMap(_.map { e => if (e._2) 0 else e._1 }).sum
@@ -44,6 +44,7 @@ object Day04 extends zio.App {
     board.exists{ l => l.forall( e => e._2)} || board.transpose.exists{ l => l.forall( e => e._2)}
   }
 
+  // winner = true for part 1, winner = false for part 2
   def run(args: List[String]) =
-    readInput.map(bingoScore).flatMap(r => putStrLn(r.toString)).exitCode
+    readInput.map(i => bingoScore(i, false)).flatMap(r => putStrLn(r.toString)).exitCode
 }
