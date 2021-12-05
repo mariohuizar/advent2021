@@ -30,7 +30,7 @@ object Day02 extends zio.App {
       input match {
         case x :: xs =>
           x match {
-            case s"forward $f" => loop(xs, aim, horizontal + f.toLong, depth + aim*f.toLong)
+            case s"forward $f" => loop(xs, aim, horizontal + f.toLong, depth + aim * f.toLong)
             case s"down $d" => loop(xs, aim + d.toLong, horizontal, depth)
             case s"up $u" => loop(xs, aim - u.toLong, horizontal, depth)
             case _ => 0L

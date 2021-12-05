@@ -16,14 +16,15 @@ object Day01 extends zio.App {
     @tailrec def loop(input: List[Int], acc: Int): Int = {
       input match {
         case x :: y :: xs =>
-          if( x < y ) loop(y :: xs, acc + 1) else loop(y :: xs, acc)
+          if (x < y) loop(y :: xs, acc + 1) else loop(y :: xs, acc)
         case _ => acc
       }
     }
+
     loop(input, 0)
   }
 
-  def find2021WindowIncrease(input: List[Int]) : Int = {
+  def find2021WindowIncrease(input: List[Int]): Int = {
     find2021Increase(input.sliding(3).map(_.sum).toList)
   }
 

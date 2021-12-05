@@ -13,9 +13,11 @@ object Day03 extends zio.App {
 
   def binaryDiagnostic(input: List[String]): Long = {
     val totalItems = input.length
-    val gammaRateAsListInt = input.map(_.map(_.asDigit)).transpose.map(_.sum).map(e => if (e >= totalItems/2) 1 else 0)
+    val gammaRateAsListInt = input.map(_.map(_.asDigit)).transpose.map(_.sum).map(e => if (e >= totalItems / 2) 1 else 0)
     val betaRateAsListInt = gammaRateAsListInt.map(e => if (e == 0) 1 else 0)
-    def listIntToDecimal(li : List[Int]): Int = Integer.parseInt(li.map(_.toString).foldLeft("")((a,b) => a+b), 2)
+
+    def listIntToDecimal(li: List[Int]): Int = Integer.parseInt(li.map(_.toString).foldLeft("")((a, b) => a + b), 2)
+
     val gammaRate = listIntToDecimal(gammaRateAsListInt)
     val betaRate = listIntToDecimal(betaRateAsListInt)
     gammaRate * betaRate
@@ -28,14 +30,20 @@ object Day03 extends zio.App {
       } else {
         val size = input.size
         val ones = input.map(_._1.head.asDigit).sum
-        val condition = if (filterMajority) { ones >= size-ones } else { ones < size-ones }
-        val remainingList = if (condition) input.filter(_._1.startsWith("1"))  else input.filter(_._1.startsWith("0"))
+        val condition = if (filterMajority) {
+          ones >= size - ones
+        } else {
+          ones < size - ones
+        }
+        val remainingList = if (condition) input.filter(_._1.startsWith("1")) else input.filter(_._1.startsWith("0"))
         calcRating(remainingList.map(e => (e._1.tail, e._2)), filterMajority)
       }
     }
+
     def oxigenRating(input: List[(String, Int)]): Long = {
       calcRating(input, true)
     }
+
     def co2ScrubberRating(input: List[(String, Int)]): Long = {
       calcRating(input, false)
     }
