@@ -13,18 +13,29 @@ object Day06 extends zio.App {
 
   def lanternFishCalculator(input: List[String]): Long = {
     val fish = input.flatMap(_.split(",").toList).map(_.toInt)
+    val fishCount = fish.groupMapReduce(identity)(_ => 1L)(_ + _)
 
-    @tailrec def reproduce(fish: List[Int], days: Int): List[Int] = {
-      if (days == 0)
-        fish
+    def reproduce(days: Int, fishCount: Map[Int, Long]): Map[Int, Long] = {
+      if (days == 0) {
+        fishCount
+      }
       else {
-        val decreaseFishTimer = fish.map { e => if (e == 0) 6 else e - 1 }
-        val newFish = List.fill(fish.count(_ == 0))(8)
-        reproduce(decreaseFishTimer ::: newFish, days - 1)
+        val decreaseFishTimer = fishCount.flatMap {
+          case (0, c) => None // fish with timer 0 will get calculated separately
+          case (t, c) => Some((t - 1, c))
+        }
+        val newFishCount = fishCount.get(0) match {
+          case None => decreaseFishTimer
+          case Some(kids) => {
+            def incr(by: Long) = (c: Option[Long]) => Some(c.getOrElse(0L) + by)
+            decreaseFishTimer.updatedWith(6)(incr(kids)).updatedWith(8)(incr(kids))
+          }
+        }
+        reproduce(days - 1, newFishCount)
       }
     }
 
-    reproduce(fish = fish, days = 256).size
+    reproduce(256, fishCount).view.values.sum
   }
 
   def run(args: List[String]) =
