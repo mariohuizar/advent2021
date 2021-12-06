@@ -11,7 +11,7 @@ object Day05 extends zio.App {
     try source.getLines().toList finally source.close()
   }
 
-  def avoidDangerAreasPart2(input: List[String], vertical: Boolean): Long = {
+  def avoidDangerAreasPart(input: List[String], vertical: Boolean): Long = {
     val parsedInput: Seq[((Int, Int), (Int, Int))] = input.map {
       case s"$a,$b -> $c,$d" => ((a.toInt, b.toInt), (c.toInt, d.toInt))
     }
@@ -56,5 +56,5 @@ object Day05 extends zio.App {
   }
 
   def run(args: List[String]) =
-    readInput.map(i => avoidDangerAreasPart2(i, true)).flatMap(r => putStrLn(r.toString)).exitCode
+    readInput.map(i => avoidDangerAreasPart(i, true)).flatMap(r => putStrLn(r.toString)).exitCode
 }

@@ -7,5 +7,5 @@ object advent2021 extends ScalaModule {
     ivy"dev.zio::zio:${zioVersion}"
   )
 
-  def mainClass = Some("advent2021.Day05")
+  def mainClass = Some("advent2021.Day06")
 }
